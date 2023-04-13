@@ -1,0 +1,68 @@
+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+
+Code to check if a database exists using PyMySQL to connect to the MySQL server
+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+
+import pymysql
+# create a connection object
+conn = pymysql.connect(host='localhost', user='root', password='password', charset='utf8mb4')
+# create a cursor object
+cursor = conn.cursor()
+# execute a query to check if the database exists
+db_name = 'my_database'
+cursor.execute(f"SELECT schema_name FROM information_schema.schemata WHERE schema_name = '{db_name}'")
+# fetch the result
+result = cursor.fetchone()
+# check if the database exists
+if result:
+    print(f"The database '{db_name}' exists!")
+else:
+    print(f"The database '{db_name}' does not exist.")
+# close the cursor and connection
+cursor.close()
+conn.close()
+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+
+
+
+
+
+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+
+Code to read an environment variable value
+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+
+import os
+# read the value of an environment variable
+my_variable = os.getenv('MY_VARIABLE')
+# print the value of the environment variable
+print(f"The value of MY_VARIABLE is {my_variable}")
+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+
+
+
+
+
+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+
+Code to keep a database connection alive using PyMySQL every minute
+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+
+import pymysql
+import time
+# set up connection parameters
+db_config = {
+    'host': 'localhost',
+    'user': 'my_user',
+    'password': 'my_password',
+    'database': 'my_database'
+}
+# set the sleep time in seconds between connection checks
+sleep_time = 60
+# connect to the database
+conn = pymysql.connect(**db_config)
+# loop indefinitely to keep the connection alive
+while True:
+    try:
+        # check if the connection is still alive by sending a ping request
+        conn.ping()
+    except:
+        # if the connection is not alive, reconnect to the database
+        conn = pymysql.connect(**db_config)
+    
+    # wait for the specified time before checking the connection again
+    time.sleep(sleep_time)
+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+#+
+

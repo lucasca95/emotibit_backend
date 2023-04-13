@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: NotStrongPassword
+      MYSQL_DATABASE: emotibit
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  web:
+    build: .
+    restart: always
+    environment:
+      FLASK_APP: app.py
+      FLASK_DEBUG: 1
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
